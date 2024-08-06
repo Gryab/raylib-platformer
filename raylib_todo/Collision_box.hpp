@@ -3,7 +3,7 @@
 
 #include "common_defines.h"
 #include "raylib.h"
-#include "Level.h"
+#include "Level.hpp"
 
 typedef enum {TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3} collision_rect_direction;
 

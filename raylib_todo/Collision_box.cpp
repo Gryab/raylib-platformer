@@ -1,4 +1,4 @@
-#include "Collision_box.h"
+#include "Collision_box.hpp"
 #include "common_defines.h"
 #include "raylib.h"
 

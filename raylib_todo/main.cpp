@@ -1,8 +1,8 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "common_defines.h"
-#include "player.h"
-#include "Level.h"
+#include "player.hpp"
+#include "Level.hpp"
 #include <string>
 
 r32 player_size = MIN_COLLISION_LENGTH * 5.0f;

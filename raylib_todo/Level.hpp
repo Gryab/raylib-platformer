@@ -5,7 +5,6 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "common_defines.h"
-#include "fstream"
 
 class Level
 {

@@ -1,10 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Level.h"
+#include "Level.hpp"
 #include "raylib.h"
 #include "common_defines.h"
-#include "Collision_box.h"
+#include "Collision_box.hpp"
 
 class Player : public Collision_box
 {
