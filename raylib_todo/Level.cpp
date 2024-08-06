@@ -1,7 +1,6 @@
 #include "Level.h"
 #include "common_defines.h"
 #include "raylib.h"
-#include <algorithm>
 #include <cstddef>
 #include <fstream>
 #include <ios>

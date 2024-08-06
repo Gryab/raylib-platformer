@@ -13,7 +13,17 @@ Level level;
 
 s32 LoopUpdate(void);
 
-s32 main() 
+s32 StartGame(void);
+
+int main() 
+{
+
+  StartGame();
+
+	return 0;
+}
+
+s32 StartGame(void)
 {
 
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
@@ -29,7 +39,7 @@ s32 main()
 
 	CloseWindow();
 
-	return 0;
+  return 0;
 }
 
 s32 LoopUpdate(void)

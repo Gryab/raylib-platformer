@@ -1,9 +1,17 @@
 #include "Collision_box.h"
 #include "common_defines.h"
 #include "raylib.h"
-#include <iostream>
 
 Collision_box::Collision_box(Rectangle rec) : rect(rec){return;};
+
+Collision_box::~Collision_box(void)
+{
+  for(u32 i = 0; i < 4; ++i)
+  {
+    delete collides_with[i];
+  }
+
+}
 
 void Collision_box::check_collision(const Level& level)
 {

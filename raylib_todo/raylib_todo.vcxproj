@@ -357,10 +357,10 @@
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collision_box.h" />
+    <ClInclude Include="Collision_box.hpp" />
     <ClInclude Include="common_defines.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="player.h" />
+    <ClInclude Include="Level.hpp" />
+    <ClInclude Include="player.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

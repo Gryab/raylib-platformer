@@ -49,6 +49,8 @@ class Collision_box
 
     Collision_box(Rectangle player_rect);
 
+    ~Collision_box(void);
+
 };
 
 #endif

@@ -4,7 +4,6 @@
 #include "common_defines.h"
 #include "raylib.h"
 #include "raymath.h"
-#include <iostream>
 
 Player::Player(Rectangle player_rect, Vector2 v, Vector2 a, const Color& color) : Collision_box(player_rect), velocity(v), acceleration(a)
 {
@@ -48,11 +47,6 @@ void Player::update_rainbow(void)
 
 }
 
-/*
-void Player::jump(float amount){
-  velocity.y = -5.0f;
-}
-*/
 void Player::controls(void)
 {
 
