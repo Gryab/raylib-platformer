@@ -18,7 +18,7 @@ s32 main()
 
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
 
-  //level.load("level");
+  level.load("level");
 
   SetTargetFPS(75);
 
@@ -36,6 +36,11 @@ s32 LoopUpdate(void)
 {
 
   static Player player(Rectangle{ 20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
+
+  if(IsKeyPressed(KEY_R))
+  {
+    level.load("level");
+  }
 
   player.update(level);
 

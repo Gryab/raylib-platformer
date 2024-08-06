@@ -9,7 +9,6 @@ typedef enum {TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3} collision_rect_direction
 
 typedef union 
 {
-
   struct {
     bool top;
     bool right;

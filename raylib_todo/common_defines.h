@@ -1,4 +1,5 @@
 #ifndef common_defines
+#define common_defines
   
   #define s8 signed char
   #define u8 unsigned char
@@ -29,7 +30,4 @@
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 540
 
-//#define DEBUG
-
-#define common_defines
 #endif

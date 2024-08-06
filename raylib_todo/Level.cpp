@@ -11,6 +11,7 @@ Level::Level(void){return;}
 
 void Level::load(std::string file_name)
 {
+  rects.clear();
   std::fstream file(file_name, std::ios_base::in | std::ios_base::binary);
   
   const std::size_t row_size = (SCREEN_WIDTH / (std::size_t)MIN_COLLISION_LENGTH);
@@ -36,6 +37,8 @@ void Level::load(std::string file_name)
       }
     }
   }
+
+  file.close();
 }
 
 void Level::draw(void)

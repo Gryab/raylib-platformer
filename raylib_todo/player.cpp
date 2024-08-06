@@ -60,45 +60,20 @@ void Player::controls(void)
   {
     if(collisions.bottom){
       velocity.y = -5.0f;
-      collisions.bottom = false;
     }
     if(collisions.top){
       velocity.y = 5.0f;
-      collisions.top = false;
     }
   }
 
   if(IsKeyDown(KEY_D))
   {
     velocity.x = PLAYER_SPEED;
-    collisions.left = false;
   }
   if(IsKeyDown(KEY_A))
   {
     velocity.x = -PLAYER_SPEED;
-    collisions.right = false;
   }
-#ifdef DEBUG
-  if(IsKeyDown(KEY_W))
-  {
-    velocity.y = -PLAYER_SPEED;
-    collisions.bottom = false;
-  }
-  if(IsKeyUp(KEY_W))
-  {
-    velocity.y = 0.0f;
-  }
-
-  if(IsKeyDown(KEY_S))
-  {
-    velocity.y = PLAYER_SPEED;
-    collisions.top = false;
-  }
-  if(IsKeyUp(KEY_S) * IsKeyUp(KEY_W))
-  {
-    velocity.y = 0.0f;
-  }
-#endif
 }
 
 void Player::move(void)
@@ -114,16 +89,14 @@ void Player::collide(void){
 
   if(collisions.top)
   {
-    std::cout << "top\n";
     y_pos = collides_with[TOP]->y + collides_with[TOP]->height;
     velocity.y = 0;
   }
 
   if(collisions.right)
   {
-    std::cout << "right\n";
-    velocity.x = -velocity.x;
     x_pos = collides_with[RIGHT]->x - width;
+    velocity.x = -velocity.x;
   }
 
   if(collisions.bottom)
@@ -131,6 +104,7 @@ void Player::collide(void){
     velocity.y = 0;
     y_pos = collides_with[BOTTOM]->y - height;
     
+    //friction 
     if(velocity.x > 0.0f)
     {
       velocity.x -= 0.05f * acceleration.y;
@@ -143,7 +117,6 @@ void Player::collide(void){
 
   if(collisions.left)
   {
-    std::cout << "left\n";
     x_pos = collides_with[LEFT]->x + collides_with[LEFT]->width;
     velocity.x = -velocity.x;
   }

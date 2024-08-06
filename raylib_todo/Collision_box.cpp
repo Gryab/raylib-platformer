@@ -7,7 +7,6 @@ Collision_box::Collision_box(Rectangle rec) : rect(rec){return;};
 
 void Collision_box::check_collision(const Level& level)
 {
-  std::cout << "collision check\n";
   for(u32 i = 0; i < level.rects.size(); ++i)
   {
 
@@ -15,7 +14,10 @@ void Collision_box::check_collision(const Level& level)
     {
       collisions.top = true;
       collides_with[TOP] = &level.rects.at(i);
-    }else if (!top_check_line_collision(*collides_with[TOP])) {
+      continue;
+    }
+    else if (!top_check_line_collision(*collides_with[TOP])) 
+    {
       collisions.top = false;
     }
     
@@ -23,7 +25,10 @@ void Collision_box::check_collision(const Level& level)
     {
       collisions.right = true;
       collides_with[RIGHT] = &level.rects.at(i);
-    }else if(!right_check_line_collision(*collides_with[RIGHT])){
+      continue;
+    }
+    else if(!right_check_line_collision(*collides_with[RIGHT]))
+    {
       collisions.right = false;
     }
     
@@ -31,7 +36,10 @@ void Collision_box::check_collision(const Level& level)
     {
       collisions.bottom = true;
       collides_with[BOTTOM] = &level.rects.at(i);
-    }else if (!bottom_check_line_collision(*collides_with[BOTTOM])) {
+      continue;
+    }
+    else if (!bottom_check_line_collision(*collides_with[BOTTOM]))
+    {
       collisions.bottom = false;
     }
     
@@ -39,7 +47,9 @@ void Collision_box::check_collision(const Level& level)
     {
       collisions.left = true;
       collides_with[LEFT] = &level.rects.at(i);
-    }else if (left_check_line_collision(*collides_with[LEFT])) {
+    }
+    else if (!left_check_line_collision(*collides_with[LEFT]))
+    {
       collisions.left = false;
     }
   }
