@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /raylib/raylib.vcxproj.filters
 /raylib/raylib.vcxproj
+/raylib_todo/raylib.h
+/raylib_todo/raymath.h
