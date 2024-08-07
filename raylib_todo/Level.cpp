@@ -1,12 +1,6 @@
 #include "Level.hpp"
-#include "common_defines.h"
-#include "raylib.h"
-#include <cstddef>
-#include <fstream>
-#include <ios>
-#include <iostream>
 
-Level::Level(void){return;}
+Level::Level(void) {return;}
 
 void Level::load(std::string file_name)
 {
@@ -18,21 +12,33 @@ void Level::load(std::string file_name)
   char row[row_size + 1];
   row[row_size] = '\0';
 
-  for(s32 y = 0; y < SCREEN_HEIGHT / MIN_COLLISION_LENGTH; ++y) 
+  for (s32 y = 0; y < SCREEN_HEIGHT / MIN_COLLISION_LENGTH; ++y) 
   {
     file.read(row, row_size);
     //TODO Gryab shitty hack, but works
     file.get();
     file.get();
-    for(s32 x = 0; row[x] != '\0'; ++x)
+    for (s32 x = 0; row[x] != '\0'; x++)
     {
-      if(row[x] == 'X')
+      if (row[x] == 'X')
       {
         rects.push_back(Rectangle{(r32)x * MIN_COLLISION_LENGTH, (r32)y * MIN_COLLISION_LENGTH, MIN_COLLISION_LENGTH, MIN_COLLISION_LENGTH});
-        for(x++; row[x] == 'X';++x)
+        for (x++ ; row[x] == 'X'; x++)
         {
           rects.back().width += MIN_COLLISION_LENGTH;
         }
+      }
+      if (row[x] == 'F') 
+      {
+        finish = {(r32)x * MIN_COLLISION_LENGTH, (r32)y * MIN_COLLISION_LENGTH, MIN_COLLISION_LENGTH, MIN_COLLISION_LENGTH};
+        for (x++; row[x] == 'F'; x++)
+        {
+          finish.width += MIN_COLLISION_LENGTH;
+        }
+      }
+      if (row[x] == 'S')
+      {
+        start = {(r32)x * MIN_COLLISION_LENGTH, (r32)y * MIN_COLLISION_LENGTH};
       }
     }
   }
@@ -43,11 +49,13 @@ void Level::load(std::string file_name)
 void Level::draw(void)
 {
 
-  for(u32 i = 0; i < rects.size(); ++i)
+  for (u32 i = 0; i < rects.size(); ++i)
   {
     
     DrawRectangleRec(rects.at(i), BLACK);
 
   }
+
+  DrawRectangleRec(finish, Color{200, 255, 200, 255});
   
 }

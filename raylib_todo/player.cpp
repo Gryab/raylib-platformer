@@ -1,16 +1,12 @@
 #include "player.hpp"
-#include "Collision_box.hpp"
-#include "Level.hpp"
-#include "common_defines.h"
 #include "raylib.h"
-#include "raymath.h"
+#include <cstdlib>
 
 Player::Player(Rectangle player_rect, Vector2 v, Vector2 a, const Color& color) : Collision_box(player_rect), velocity(v), acceleration(a)
 {
 
   this->r = color.r, this->g = color.g, this->b = color.b, this->line_color.a = color.a;
 
-  return;
 }
 
 void Player::draw(void)
@@ -59,15 +55,6 @@ void Player::controls(void)
       velocity.y = 5.0f;
     }
   }
-
-  if(IsKeyDown(KEY_D))
-  {
-    velocity.x = PLAYER_SPEED;
-  }
-  if(IsKeyDown(KEY_A))
-  {
-    velocity.x = -PLAYER_SPEED;
-  }
 }
 
 void Player::move(void)
@@ -97,16 +84,6 @@ void Player::collide(void){
   {
     velocity.y = 0;
     y_pos = collides_with[BOTTOM]->y - height;
-    
-    //friction 
-    if(velocity.x > 0.0f)
-    {
-      velocity.x -= 0.05f * acceleration.y;
-    }
-    else if(velocity.x < 0.0f)
-    {
-      velocity.x += 0.05f * acceleration.y;
-    }
   }
 
   if(collisions.left)
@@ -116,6 +93,18 @@ void Player::collide(void){
   }
 }
 
+inline void Player::check_finish(const Level& level)
+{
+  if(CheckCollisionRecs(level.finish, rect)) exit(0);
+}
+
+void Player::spawn_on_level(const Level& level)
+{
+
+  pos = level.start;
+
+}
+
 void Player::update(const Level& level)
 {
 
@@ -123,6 +112,7 @@ void Player::update(const Level& level)
   controls();
   move();
   check_collision(level);
+  check_finish(level);
   collide();
 
 }

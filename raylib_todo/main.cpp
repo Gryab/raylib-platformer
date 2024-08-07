@@ -6,17 +6,17 @@
 #include <string>
 
 r32 player_size = MIN_COLLISION_LENGTH * 5.0f;
-Vector2 velocity = {0.0f, 0.0f};
+Vector2 velocity = {5.0f, 0.0f};
 Vector2 g = {0.0f, 10.0f};
 
 Level level;
 
-s32 LoopUpdate(void);
+s32 LoopUpdate(Player& player);
 
 s32 StartGame(void);
 
 int main() 
-{
+{ 
 
   StartGame();
 
@@ -30,11 +30,15 @@ s32 StartGame(void)
 
   level.load("level");
 
+  Player player(Rectangle{20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
+
+  player.spawn_on_level(level);
+
   SetTargetFPS(75);
 
-  while(!WindowShouldClose())
+  while (!WindowShouldClose())
   {
-    LoopUpdate();
+    LoopUpdate(player);
   };
 
 	CloseWindow();
@@ -42,15 +46,8 @@ s32 StartGame(void)
   return 0;
 }
 
-s32 LoopUpdate(void)
+s32 LoopUpdate(Player& player)
 {
-
-  static Player player(Rectangle{ 20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
-
-  if(IsKeyPressed(KEY_R))
-  {
-    level.load("level");
-  }
 
   player.update(level);
 

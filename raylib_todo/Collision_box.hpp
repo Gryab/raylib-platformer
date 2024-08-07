@@ -28,6 +28,8 @@ class Collision_box
 
     const Rectangle* collides_with[4] = {new Rectangle{0}, new Rectangle{0}, new Rectangle{0}, new Rectangle{0}};
 
+    Rectangle colliders[4];
+
   public: 
     collision_directions collisions = {0};
 
@@ -47,9 +49,7 @@ class Collision_box
     
     bool left_check_line_collision(Rectangle rec);
 
-    Collision_box(Rectangle player_rect);
-
-    ~Collision_box(void);
+    Collision_box(const Rectangle &player_rect);
 
 };
 
