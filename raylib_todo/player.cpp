@@ -9,7 +9,7 @@ Player::Player(Rectangle player_rect, Vector2 v, Vector2 a, const Color& color) 
 
 }
 
-void Player::draw(void)
+void Player::draw(void) const
 {
 
   DrawRectangleRec(this->rect, BLACK);
@@ -59,10 +59,11 @@ void Player::controls(void)
 
 void Player::move(void)
 {
-
-  pos = Vector2Add(pos, velocity);
-  velocity.x += acceleration.x * GetFrameTime();
-  velocity.y += acceleration.y * GetFrameTime();
+  r32 frame_time = GetFrameTime();
+  x_pos += velocity.x;
+  y_pos += velocity.y;
+  velocity.x += acceleration.x * frame_time;
+  velocity.y += acceleration.y * frame_time;
 
 }
 
@@ -93,9 +94,9 @@ void Player::collide(void){
   }
 }
 
-inline void Player::check_finish(const Level& level)
+bool Player::check_finish(const Level& level) const
 {
-  if(CheckCollisionRecs(level.finish, rect)) exit(0);
+  return CheckCollisionRecs(level.finish, rect);
 }
 
 void Player::spawn_on_level(const Level& level)

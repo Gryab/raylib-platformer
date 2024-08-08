@@ -5,8 +5,11 @@
 #include "Level.hpp"
 #include <string>
 
+std::vector<std::string> level_names = {"level", "test_level"};
+u8 level_name_num = 0;
+
 r32 player_size = MIN_COLLISION_LENGTH * 5.0f;
-Vector2 velocity = {5.0f, 0.0f};
+Vector2 velocity = {PLAYER_SPEED, 0.0f};
 Vector2 g = {0.0f, 10.0f};
 
 Level level;
@@ -14,6 +17,8 @@ Level level;
 s32 LoopUpdate(Player& player);
 
 s32 StartGame(void);
+
+s32 HandleFinish(const Player& player);
 
 int main() 
 { 
@@ -28,7 +33,7 @@ s32 StartGame(void)
 
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
 
-  level.load("level");
+  level.load(level_names.at(level_name_num));
 
   Player player(Rectangle{20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
 
@@ -46,10 +51,28 @@ s32 StartGame(void)
   return 0;
 }
 
+s32 HandleFinish(Player& player)
+{
+
+  if (player.check_finish(level))
+  {
+    if (++level_name_num >= level_names.size()) level_name_num = 0;
+    level.load(level_names.at(level_name_num));
+    player.spawn_on_level(level);
+  }
+
+  return 0;
+
+}
+
 s32 LoopUpdate(Player& player)
 {
 
+  if(player.y_pos >= SCREEN_HEIGHT) player.spawn_on_level(level);
+
   player.update(level);
+
+  HandleFinish(player);
 
   BeginDrawing();
 

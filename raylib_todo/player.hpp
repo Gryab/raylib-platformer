@@ -23,7 +23,7 @@ class Player : public Collision_box
 
     void update_rainbow(void);
 
-    void draw(void);
+    void draw(void) const;
 
     void move(void);
 
@@ -35,7 +35,7 @@ class Player : public Collision_box
 
     void spawn_on_level(const Level& level);
 
-    void check_finish(const Level& level);
+    bool check_finish(const Level& level) const;
 
     Player(Rectangle player_rect, Vector2 v, Vector2 a, const Color& color);
 
