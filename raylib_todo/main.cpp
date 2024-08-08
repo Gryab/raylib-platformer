@@ -5,7 +5,7 @@
 #include "Level.hpp"
 #include <string>
 
-std::vector<std::string> level_names = {"level", "test_level"};
+std::vector<std::string> level_names = {"level1", "level2", "end_level"};
 u8 level_name_num = 0;
 
 r32 player_size = MIN_COLLISION_LENGTH * 5.0f;
@@ -54,13 +54,11 @@ s32 StartGame(void)
 s32 HandleFinish(Player& player)
 {
 
-  if (player.check_finish(level))
-  {
-    if (++level_name_num >= level_names.size()) level_name_num = 0;
-    level.load(level_names.at(level_name_num));
-    player.spawn_on_level(level);
-  }
-
+  if (++level_name_num >= level_names.size() - 1) player.acceleration = {0}, player.velocity.y = 0.0f;
+  
+  level.load(level_names.at(level_name_num));
+  player.spawn_on_level(level);
+  
   return 0;
 
 }
@@ -72,7 +70,7 @@ s32 LoopUpdate(Player& player)
 
   player.update(level);
 
-  HandleFinish(player);
+  if (player.check_finish(level)) HandleFinish(player);
 
   BeginDrawing();
 

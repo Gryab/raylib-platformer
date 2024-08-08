@@ -4,6 +4,8 @@ Level::Level(void) {return;}
 
 void Level::load(std::string file_name)
 {
+  start = {-1.0f, -1.0f};
+  finish = {-1.0f, -1.0f, 0.0f, 0.0f};
   rects.clear();
   std::fstream file(file_name, std::ios_base::in | std::ios_base::binary);
   

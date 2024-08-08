@@ -101,8 +101,8 @@ bool Player::check_finish(const Level& level) const
 
 void Player::spawn_on_level(const Level& level)
 {
-
-  pos = level.start;
+  
+  if (level.start.x >= 0.0f) pos = level.start;
 
 }
 
@@ -110,6 +110,7 @@ void Player::update(const Level& level)
 {
 
   update_rainbow();
+  if(paused) return;
   controls();
   move();
   check_collision(level);

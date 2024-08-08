@@ -16,6 +16,8 @@ class Player : public Collision_box
 
   public: 
 
+    bool paused = false;
+
     Vector2 velocity;
     Vector2 acceleration;
 

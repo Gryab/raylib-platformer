@@ -17,7 +17,7 @@ class Level
 
   std::vector<Rectangle>rects;
 
-  Vector2 start = {0};
+  Vector2 start = {-1.0f, -1.0f};
 
   Rectangle finish = {0.0f, 0.0f, 0.0f, 0.0f};
 
