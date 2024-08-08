@@ -23,4 +23,6 @@
     u8* value;
   }s_byte_array;
 
+  #define return_defer(val) {return_value=val;goto defer;};
+
 #endif

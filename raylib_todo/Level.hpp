@@ -28,7 +28,7 @@ class Level
 
     void draw(void);
 
-    void load(std::string file_name);
+    s32 load(std::string file_name);
 
 };
 

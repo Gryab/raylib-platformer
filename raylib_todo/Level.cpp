@@ -2,13 +2,15 @@
 
 Level::Level(void) {return;}
 
-void Level::load(std::string file_name)
+s32 Level::load(std::string file_name)
 {
   start = {-1.0f, -1.0f};
   finish = {-1.0f, -1.0f, 0.0f, 0.0f};
   rects.clear();
   std::fstream file(file_name, std::ios_base::in | std::ios_base::binary);
-  
+ 
+  if(!file.is_open()) return 1;
+
   const std::size_t row_size = (SCREEN_WIDTH / (std::size_t)MIN_COLLISION_LENGTH);
 
   char row[row_size + 1];
@@ -46,6 +48,7 @@ void Level::load(std::string file_name)
   }
 
   file.close();
+  return 0;
 }
 
 void Level::draw(void)

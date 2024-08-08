@@ -3,12 +3,11 @@
 #include "common_defines.h"
 #include "player.hpp"
 #include "Level.hpp"
-#include <cstdio>
-#include <ctime>
+#include <ios>
 #include <string>
 
-std::vector<std::string> level_names = {"level1", "level2", "end_level"};
-u8 level_name_num = 0;
+std::vector<std::string> level_names;
+u32 level_name_num = 0;
 
 bool won = false;
 std::string final_time;
@@ -20,6 +19,8 @@ Vector2 g = {0.0f, 10.0f};
 Level level;
 
 r32 timer;
+
+s32 LoadLevelList(void);
 
 s32 LoopUpdate(Player& player);
 
@@ -38,24 +39,34 @@ int main()
 s32 StartGame(void)
 {
 
+  s32 return_value = 0;
+
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
 
-  level.load(level_names.at(level_name_num));
-
-  Player player(Rectangle{20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
-
-  player.spawn_on_level(level);
-
-  SetTargetFPS(75);
-
-  while (!WindowShouldClose())
+  if(LoadLevelList() != 0) 
   {
-    LoopUpdate(player);
-  };
+    return_defer(1);
+  }
 
-	CloseWindow();
+  {
+    level.load(level_names.at(level_name_num));
 
-  return 0;
+    Player player(Rectangle{20.0f, 20.0f, player_size, player_size}, velocity, g, Color{255, 0, 0});
+
+    player.spawn_on_level(level);
+
+    SetTargetFPS(75);
+
+    while (!WindowShouldClose())
+    {
+      LoopUpdate(player);
+    }
+  }
+defer:
+
+  CloseWindow();
+  
+  return return_value;
 }
 
 void HandleWin(Player& player)
@@ -87,9 +98,9 @@ s32 HandleFinish(Player& player)
 void DrawWin(const Player& player)
 {
 
-  DrawText("Final time:", player.x_pos/2.0f + SCREEN_WIDTH/16.0f, player.y_pos - 50.0f, 50, Color{player.line_color.b, 128, player.line_color.r, 255});
+  DrawText("Final time:", (s32)(player.x_pos/2.0f + SCREEN_WIDTH/16.0f), (s32)(player.y_pos - 50.0f), 50, Color{player.line_color.b, 128, player.line_color.r, 255});
   
-  DrawText(final_time.c_str(), player.x_pos/3.0f + SCREEN_WIDTH/8.0f, player.y_pos + 50.0f, 50, Color{player.line_color.r, 128, player.line_color.g, 255});
+  DrawText(final_time.c_str(), (s32)(player.x_pos/3.0f + SCREEN_WIDTH/8.0f), (s32)(player.y_pos + 50.0f), 50, Color{player.line_color.r, 128, player.line_color.g, 255});
 
 }
 
@@ -97,6 +108,8 @@ s32 LoopUpdate(Player& player)
 {
 
   if(player.y_pos >= SCREEN_HEIGHT) player.spawn_on_level(level);
+
+  if(IsKeyPressed(KEY_R)) level.load(level_names.at(level_name_num)), player.spawn_on_level(level);
 
   player.update(level);
 
@@ -119,4 +132,30 @@ s32 LoopUpdate(Player& player)
   timer += GetFrameTime();
 
   return 0;
+}
+
+s32 LoadLevelList(void)
+{
+
+  std::fstream file;
+  file.open("level_list.txt", std::ios_base::in | std::ios_base::binary);
+  
+  std::string level_name;
+
+  char clevel_name[100];
+
+  if(!file.is_open()) return 1;
+
+  while (file.getline(clevel_name, 100, ';').good()) 
+  {
+    level_name = clevel_name;
+    level_names.push_back(level_name.substr(level_name.find_first_not_of(' ')));
+  }
+
+  while (file.is_open())
+  {
+    file.close();
+  }
+  return 0;
+
 }
