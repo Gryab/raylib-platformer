@@ -54,10 +54,10 @@ void Level::draw(void)
   for (u32 i = 0; i < rects.size(); ++i)
   {
     
-    DrawRectangleRec(rects.at(i), BLACK);
+    DrawRectangleRec(rects.at(i), MAIN_COLOR);
 
   }
 
-  DrawRectangleRec(finish, Color{200, 255, 200, 255});
+  DrawRectangleRec(finish, FINISH_COLOR);
   
 }

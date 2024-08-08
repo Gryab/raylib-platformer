@@ -9,6 +9,7 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include "config.hpp"
 
 class Level
 {

@@ -23,11 +23,4 @@
     u8* value;
   }s_byte_array;
 
-#define MIN_COLLISION_LENGTH 10.0f
-
-#define PLAYER_SPEED 5.0f
-
-#define SCREEN_WIDTH 960
-#define SCREEN_HEIGHT 540
-
 #endif
