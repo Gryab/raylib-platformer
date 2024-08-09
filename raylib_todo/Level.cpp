@@ -1,4 +1,5 @@
 #include "Level.hpp"
+#include "config.hpp"
 
 Level::Level(void) {return;}
 
@@ -57,7 +58,7 @@ void Level::draw(void)
   for (u32 i = 0; i < rects.size(); ++i)
   {
     
-    DrawRectangleRec(rects.at(i), MAIN_COLOR);
+    DrawRectangleRec(rects.at(i), MAIN_FULL_COLOR);
 
   }
 

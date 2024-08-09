@@ -11,20 +11,20 @@ namespace game
 {
 
   std::vector<std::string> level_names;
-  u32 level_name_num = 0;
+  u32 level_name_num;
 
-  bool ended = false;
+  bool ended;
   std::string final_time;
 
-  r32 player_size = MIN_COLLISION_LENGTH * 5.0f;
-  Vector2 velocity = {PLAYER_SPEED, 0.0f};
-  Vector2 g = {0.0f, 10.0f};
+  r32 player_size;
+  Vector2 velocity;
+  Vector2 g;
 
   Level level;
 
   r32 timer;
 
-  Texture2D background_texture;
+  Texture2D sun_texture, clowds0, over0, over1, over2, over3, over4;
 
 }
 
@@ -35,6 +35,8 @@ s32 LoopUpdate(Player& player);
 s32 StartGame(void);
 
 s32 HandleFinish(const Player& player);
+
+void InitValues(void);
 
 int main() 
 { 
@@ -49,7 +51,11 @@ s32 StartGame(void)
 
   s32 return_value = 0;
 
-	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
+  InitValues();
+
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
+  
+  SetTargetFPS(75);
 
   if(LoadLevelList() != 0) 
   {
@@ -57,34 +63,78 @@ s32 StartGame(void)
   }
 
   {
-
-    Image background_image = LoadImage("assets/background.png");
-
-    game::background_texture = LoadTextureFromImage(background_image);
-
+    {
+      Image _image = LoadImage("assets/SUN.png");
+      game::sun_texture = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/CLOWDS0.png");
+      game::clowds0 = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/over0.png");
+      game::over0 = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/over1.png");
+      game::over1 = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/over2.png");
+      game::over2 = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/over3.png");
+      game::over3 = LoadTextureFromImage(_image);
+      _image = LoadImage("assets/over4.png");
+      game::over4 = LoadTextureFromImage(_image);
+      UnloadImage(_image);
+    }
     game::level.load(game::level_names.at(game::level_name_num));
 
     Player player(Rectangle{20.0f, 20.0f, game::player_size, game::player_size}, game::velocity, game::g, Color{255, 0, 0, 255});
 
     player.spawn_on_level(game::level);
 
-    SetTargetFPS(75);
-
     while (!WindowShouldClose())
     {
       LoopUpdate(player);
     }
 
-
-    UnloadImage(background_image);
-
-    UnloadTexture(game::background_texture);
+    UnloadTexture(game::sun_texture);
+    UnloadTexture(game::clowds0);
+    UnloadTexture(game::over0);
+    UnloadTexture(game::over1);
+    UnloadTexture(game::over2);
+    UnloadTexture(game::over3);
+    UnloadTexture(game::over4);
   }
 defer:
 
   CloseWindow();
 
   return return_value;
+}
+
+void InitValues(void)
+{
+
+  game::level_name_num = 0;
+
+  game::ended = false;
+
+  game::player_size = MIN_COLLISION_LENGTH * 5.0f;
+  
+  game::velocity = {PLAYER_SPEED, 0.0f};
+  
+  game::g = {0.0f, 10.0f};
+
+}
+
+s32 RestartGame(Player& player)
+{
+
+  InitValues();
+
+  game::level.load(game::level_names.at(game::level_name_num));
+
+  player.velocity = game::velocity;
+  
+  player.acceleration = game::g;
+
+  player.spawn_on_level(game::level);
+  
+  return 0;
 }
 
 void HandleWin(Player& player)
@@ -129,13 +179,25 @@ s32 LoopUpdate(Player& player)
 
   if(IsKeyPressed(KEY_R)) game::level.load(game::level_names.at(game::level_name_num)), player.spawn_on_level(game::level);
 
+  if(game::ended & IsKeyPressed(KEY_ENTER)) RestartGame(player);
+
   player.update(game::level);
 
   if (player.check_finish(game::level)) HandleFinish(player);
 
   BeginDrawing();
+    
+    ClearBackground(BASE_COLOR);
 
-    DrawTexture(game::background_texture, 0, 0, Color{255, 255, 255, 255});
+    DrawTextureEx(game::sun_texture, Vector2{0 - player.x_pos / 32.0f, 0 - player.y_pos / 32.0f}, 0.0f, 1.0f, GOLD_COLOR);
+
+    DrawTextureEx(game::clowds0, Vector2{0 - player.x_pos / 25.0f, 0 - player.y_pos / 25.0f}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
+    
+    DrawTextureEx(game::over0, Vector2{0 - player.x_pos / 20.0f, 0 - player.y_pos / 20.0f}, 0.0f, 0.75f, BASE_DARKER_COLOR);
+    DrawTextureEx(game::over1, Vector2{0 - player.x_pos / 8.0f, 0 - player.y_pos / 8.0f}, 0.0f, 0.75f, HIGH_MID_COLOR);
+    DrawTextureEx(game::over2, Vector2{0 - player.x_pos / 4.0f, 0 - player.y_pos / 4.0f}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
+    DrawTextureEx(game::over3, Vector2{0 - player.x_pos / 3.5f, 0 - player.y_pos / 3.5f}, 0.0f, 0.75f, MAIN_HALF_COLOR);
+    DrawTextureEx(game::over4, Vector2{0 - player.x_pos / 3.0f, 0 - player.y_pos / 3.0f}, 0.0f, 0.7f, MAIN_TWO_THIRDS_COLOR);
     
     game::level.draw();
     
