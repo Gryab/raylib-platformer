@@ -1,4 +1,3 @@
-#include "config.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include "common_defines.h"
@@ -7,8 +6,26 @@
 #include <ios>
 #include <string>
 
+namespace config 
+{
+
+  #include "Menu.c" //i can explain, trust me
+
+}
+
+typedef enum 
+{
+
+  NO_SCREEN = 0,
+  MENU_SCREEN = 1,
+  LEVEL_SCREEN = 2
+
+} screen_enum;
+
 namespace game 
 {
+
+  screen_enum current_screen = NO_SCREEN;
 
   std::vector<std::string> level_names;
   u32 level_name_num;
@@ -30,7 +47,7 @@ namespace game
 
 s32 LoadLevelList(void);
 
-s32 LoopUpdate(Player& player);
+s32 GameLoopUpdate(Player& player);
 
 s32 StartGame(void);
 
@@ -88,7 +105,35 @@ s32 StartGame(void)
 
     while (!WindowShouldClose())
     {
-      LoopUpdate(player);
+      switch (game::current_screen)
+      {
+        
+        case NO_SCREEN: 
+        {
+          return_defer(1);
+        }
+        break;
+
+        case MENU_SCREEN:
+        {
+          config::UpdateMenu();
+        }
+        break;
+
+        case LEVEL_SCREEN:
+        {
+          GameLoopUpdate(player);
+        }
+        break;
+
+        default: 
+        {
+          return_defer(1);
+        }
+        break;
+
+      }
+
     }
 
     UnloadTexture(game::sun_texture);
@@ -108,6 +153,8 @@ defer:
 
 void InitValues(void)
 {
+
+  game::current_screen = MENU_SCREEN;
 
   game::level_name_num = 0;
 
@@ -172,7 +219,7 @@ void DrawEndScreen(const Player& player)
 
 }
 
-s32 LoopUpdate(Player& player)
+s32 GameLoopUpdate(Player& player)
 {
 
   if(player.y_pos >= SCREEN_HEIGHT) player.spawn_on_level(game::level);
@@ -187,18 +234,18 @@ s32 LoopUpdate(Player& player)
 
   BeginDrawing();
     
-    ClearBackground(BASE_COLOR);
+    ClearBackground(LIGHT_BASE_COLOR);
 
-    DrawTextureEx(game::sun_texture, Vector2{0 - player.x_pos / 32.0f, 0 - player.y_pos / 32.0f}, 0.0f, 1.0f, GOLD_COLOR);
+    DrawTextureEx(game::sun_texture, Vector2{0 - player.x_pos / 32.0f, 0 - player.y_pos / 32.0f}, 0.0f, 1.0f, LIGHT_GOLD_COLOR);
 
-    DrawTextureEx(game::clowds0, Vector2{0 - player.x_pos / 25.0f, 0 - player.y_pos / 25.0f}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
+    DrawTextureEx(game::clowds0, Vector2{0 - player.x_pos / 25.0f, 0 - player.y_pos / 25.0f}, 0.0f, 1.0f, ColorAlpha(LIGHT_RED_SUBTLE_COLOR, 0.5f));
     
-    DrawTextureEx(game::over0, Vector2{0 - player.x_pos / 20.0f, 0 - player.y_pos / 20.0f}, 0.0f, 0.75f, BASE_DARKER_COLOR);
-    DrawTextureEx(game::over1, Vector2{0 - player.x_pos / 8.0f, 0 - player.y_pos / 8.0f}, 0.0f, 0.75f, HIGH_MID_COLOR);
-    DrawTextureEx(game::over2, Vector2{0 - player.x_pos / 4.0f, 0 - player.y_pos / 4.0f}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
-    DrawTextureEx(game::over3, Vector2{0 - player.x_pos / 3.5f, 0 - player.y_pos / 3.5f}, 0.0f, 0.75f, MAIN_HALF_COLOR);
-    DrawTextureEx(game::over4, Vector2{0 - player.x_pos / 3.0f, 0 - player.y_pos / 3.0f}, 0.0f, 0.7f, MAIN_TWO_THIRDS_COLOR);
-    
+    DrawTextureEx(game::over0, Vector2{0 - player.x_pos / 20.0f, 0 - player.y_pos / 20.0f}, 0.0f, 0.75f, LIGHT_BASE_DARKER_COLOR);
+    DrawTextureEx(game::over1, Vector2{0 - player.x_pos / 8.0f, 0 - player.y_pos / 8.0f}, 0.0f, 0.75f, LIGHT_HIGH_MID_COLOR);
+    DrawTextureEx(game::over2, Vector2{0 - player.x_pos / 4.0f, 0 - player.y_pos / 4.0f}, 0.0f, 0.75f, LIGHT_HIGH_HIGH_COLOR);
+    DrawTextureEx(game::over3, Vector2{0 - player.x_pos / 3.5f, 0 - player.y_pos / 3.5f}, 0.0f, 0.75f, LIGHT_MAIN_HALF_COLOR);
+    DrawTextureEx(game::over4, Vector2{0 - player.x_pos / 3.0f, 0 - player.y_pos / 3.0f}, 0.0f, 0.7f, LIGHT_MAIN_TWO_THIRDS_COLOR);
+
     game::level.draw();
     
     player.draw();

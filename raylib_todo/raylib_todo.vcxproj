@@ -359,7 +359,7 @@
   <ItemGroup>
     <ClInclude Include="Collision_box.hpp" />
     <ClInclude Include="common_defines.h" />
-    <ClInclude Include="config.hpp" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="player.hpp" />
   </ItemGroup>
