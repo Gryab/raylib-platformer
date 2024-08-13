@@ -12,7 +12,7 @@ Player::Player(Rectangle player_rect, Vector2 v, Vector2 a, const Color& color) 
 void Player::draw(void) const
 {
 
-  DrawRectangleRec(this->rect, LIGHT_MAIN_FULL_COLOR);
+  DrawRectangleRec(this->rect, MAIN_FULL_COLOR);
   DrawRectangleLinesEx(this->rect, MIN_COLLISION_LENGTH / 2.0f, this->line_color);
 
 }

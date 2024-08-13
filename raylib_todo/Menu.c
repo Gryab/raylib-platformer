@@ -11,9 +11,19 @@ extern "C" {
 typedef enum 
 {
 
+  NO_SCREEN = 0,
+  MENU_SCREEN = 1,
+  LEVEL_SCREEN = 2
+
+} screen_enum;
+
+typedef enum 
+{
   NO_OPTION = 0,
 
-  THEME_TOGGLE = 1,
+  QUIT = 1,
+
+  THEME_TOGGLE = 2,
 
 } menu_options;
 
@@ -26,25 +36,125 @@ typedef enum
 
 } theme;
 
-theme current_theme = LIGHT;
+theme current_theme = DARK;
 
+screen_enum current_screen = NO_SCREEN;
+
+void handle_nothing(void)
+{
+return;
+}
+
+void handle_quit(void) 
+{
+  running = false;
+}
+
+void handle_theme(void)
+{
+  current_theme = (current_theme == LIGHT) ? DARK : LIGHT;
+  if(current_theme == LIGHT)
+  {
+    MAIN_FULL_COLOR       = LIGHT_MAIN_FULL_COLOR;         
+    MAIN_TWO_THIRDS_COLOR = LIGHT_MAIN_TWO_THIRDS_COLOR;
+    MAIN_HALF_COLOR       = LIGHT_MAIN_HALF_COLOR;      
+    BASE_COLOR            = LIGHT_BASE_COLOR;           
+    BASE_LIGHTER_COLOR    = LIGHT_BASE_LIGHTER_COLOR;   
+    BASE_DARKER_COLOR     = LIGHT_BASE_DARKER_COLOR;    
+    RED_BRIGHT_COLOR      = LIGHT_RED_BRIGHT_COLOR;     
+    RED_SUBTLE_COLOR      = LIGHT_RED_SUBTLE_COLOR;     
+    GOLD_COLOR            = LIGHT_GOLD_COLOR;           
+    YELLOW_COLOR          = LIGHT_YELLOW_COLOR;         
+    FINISH_COLOR          = LIGHT_FINISH_COLOR;         
+    FINISH_DARK_COLOR     = LIGHT_FINISH_DARK_COLOR;    
+    PURPLE_COLOR          = LIGHT_PURPLE_COLOR;         
+    HIGH_LOW_COLOR        = LIGHT_HIGH_LOW_COLOR;       
+    HIGH_MID_COLOR        = LIGHT_HIGH_MID_COLOR;       
+    HIGH_HIGH_COLOR       = LIGHT_HIGH_HIGH_COLOR;      
+  } else if(current_theme == DARK)
+  {
+    MAIN_FULL_COLOR       = DARK_MAIN_FULL_COLOR;      
+    MAIN_TWO_THIRDS_COLOR = DARK_MAIN_TWO_THIRDS_COLOR;
+    MAIN_HALF_COLOR       = DARK_MAIN_HALF_COLOR;      
+    BASE_COLOR            = DARK_BASE_COLOR;           
+    BASE_LIGHTER_COLOR    = DARK_BASE_LIGHTER_COLOR;   
+    BASE_DARKER_COLOR     = DARK_BASE_DARKER_COLOR;    
+    RED_BRIGHT_COLOR      = DARK_RED_BRIGHT_COLOR;     
+    RED_SUBTLE_COLOR      = DARK_RED_SUBTLE_COLOR;     
+    GOLD_COLOR            = DARK_GOLD_COLOR;           
+    YELLOW_COLOR          = DARK_YELLOW_COLOR;         
+    FINISH_COLOR          = DARK_FINISH_COLOR;         
+    FINISH_DARK_COLOR     = DARK_FINISH_DARK_COLOR;    
+    PURPLE_COLOR          = DARK_PURPLE_COLOR;         
+    HIGH_LOW_COLOR        = DARK_HIGH_LOW_COLOR;       
+    HIGH_MID_COLOR        = DARK_HIGH_MID_COLOR;       
+    HIGH_HIGH_COLOR       = DARK_HIGH_HIGH_COLOR;      
+  }
+}
+
+struct {s32 selected_option; char* menu_options[THEME_TOGGLE + 1]; void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu = {QUIT, \
+                                                                                                                            {"NOTHING", "QUIT", "Select theme"}, \
+                                                                                                                            {handle_nothing, handle_quit, handle_theme}};
 void DrawMenu(void)
 {
+
+  static Rectangle nothing_menu_item_rect = {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
+                                          SCREEN_HEIGHT / 2.0f - MIN_COLLISION_LENGTH * 4.0f, \
+                                          MIN_COLLISION_LENGTH * 50.0f, \
+                                          MIN_COLLISION_LENGTH * 4.0f};
+  static Rectangle quit_menu_item_rect = {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
+                                          SCREEN_HEIGHT / 2.0f, \
+                                          MIN_COLLISION_LENGTH * 50.0f, \
+                                          MIN_COLLISION_LENGTH * 4.0f};
+  static Rectangle theme_menu_item_rect =  {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
+                                            SCREEN_HEIGHT / 2.0f + MIN_COLLISION_LENGTH * 4.0f, \
+                                            MIN_COLLISION_LENGTH * 50.0f, \
+                                            MIN_COLLISION_LENGTH * 4.0f};
+  Color quit_menu_item_color = (Menu.selected_option == QUIT)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
+  Color theme_menu_item_color = (Menu.selected_option == THEME_TOGGLE)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
+  Color nothing_menu_item_color = (Menu.selected_option == NO_OPTION)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
 
   BeginDrawing();
   {
 
-    ClearBackground(LIGHT_BASE_COLOR);
+    ClearBackground(BASE_COLOR);
+
+    DrawRectangleRec(nothing_menu_item_rect, nothing_menu_item_color);
+    DrawText(Menu.menu_options[NO_OPTION], (s32)nothing_menu_item_rect.x, (s32)nothing_menu_item_rect.y, 50, MAIN_FULL_COLOR);
+    DrawRectangleRec(quit_menu_item_rect, quit_menu_item_color);
+    DrawText(Menu.menu_options[QUIT], (s32)quit_menu_item_rect.x, (s32)quit_menu_item_rect.y, 50, MAIN_FULL_COLOR);
+    DrawRectangleRec(theme_menu_item_rect, theme_menu_item_color);
+    DrawText(Menu.menu_options[THEME_TOGGLE], (s32)theme_menu_item_rect.x, (s32)theme_menu_item_rect.y, 50, MAIN_FULL_COLOR);
     
   }  
   EndDrawing();
 
 }
 
-s32 UpdateMenu(void)
+s32 UpdateMenu()
 {
 
-  static menu_options menu_option = NO_OPTION;
+  if (IsKeyPressed(KEY_SPACE)) 
+  {
+    current_screen = LEVEL_SCREEN;
+  }
+
+  if (IsKeyPressed(KEY_DOWN))
+  {
+    Menu.selected_option += 1;
+    if (Menu.selected_option > THEME_TOGGLE) Menu.selected_option = 0;
+  }
+
+  if (IsKeyPressed(KEY_UP))
+  {
+    Menu.selected_option -= 1;
+    if (Menu.selected_option < 0) Menu.selected_option = THEME_TOGGLE;
+  }
+
+  if(IsKeyPressed(KEY_ENTER))
+  {
+    Menu.handle_menu_item[Menu.selected_option]();
+  }
 
   DrawMenu();
 

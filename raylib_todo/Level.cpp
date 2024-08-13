@@ -1,6 +1,7 @@
 #include "Level.hpp"
 #include "config.h"
 
+#include "colors.h"
 Level::Level(void) {return;}
 
 s32 Level::load(std::string file_name)
@@ -58,10 +59,10 @@ void Level::draw(void)
   for (u32 i = 0; i < rects.size(); ++i)
   {
     
-    DrawRectangleRec(rects.at(i), LIGHT_MAIN_FULL_COLOR);
+    DrawRectangleRec(rects.at(i), MAIN_FULL_COLOR);
 
   }
 
-  DrawRectangleRec(finish, LIGHT_FINISH_COLOR);
+  DrawRectangleRec(finish, FINISH_COLOR);
   
 }

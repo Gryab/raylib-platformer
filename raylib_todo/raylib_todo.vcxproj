@@ -352,12 +352,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision_box.cpp" />
-    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision_box.hpp" />
+    <ClInclude Include="colors.h" />
     <ClInclude Include="common_defines.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Level.hpp" />
