@@ -158,6 +158,8 @@ void InitValues(void)
   
   game::g = {0.0f, 10.0f};
 
+  game::timer = 0.0f;
+
 }
 
 s32 RestartGame(Player& player)
@@ -205,9 +207,14 @@ s32 HandleFinish(Player& player)
 void DrawEndScreen(const Player& player)
 {
 
-  DrawText("Final time:", (s32)(player.x_pos/2.0f + SCREEN_WIDTH/16.0f), (s32)(player.y_pos - 50.0f), 50, Color{player.line_color.b, 128, player.line_color.r, 255});
+  DrawText("Final time:", (s32)(player.x_pos/2.0f + SCREEN_WIDTH/16.0f), \
+                          (s32)(player.y_pos - 50.0f), 50, \
+                          Color{player.line_color.b, 128, player.line_color.r, 255});
   
-  DrawText(game::final_time.c_str(), (s32)(player.x_pos/3.0f + SCREEN_WIDTH/8.0f), (s32)(player.y_pos + 50.0f), 50, Color{player.line_color.r, 128, player.line_color.g, 255});
+  DrawText(game::final_time.c_str(), \
+      (s32)(player.x_pos / 3.0f + SCREEN_WIDTH / 8.0f), \
+      (s32)(player.y_pos+50.0f), 50, \
+      Color{player.line_color.r, 128, player.line_color.g, 255});
 
 }
 
@@ -236,13 +243,13 @@ s32 GameLoopUpdate(Player& player)
 
     DrawTextureEx(game::sun_texture, Vector2{0 - player.x_pos / 32.0f, 0 - player.y_pos / 32.0f}, 0.0f, 1.0f, GOLD_COLOR);
 
-    DrawTextureEx(game::clowds0, Vector2{0 - player.x_pos / 25.0f, 0 - player.y_pos / 25.0f}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
+    DrawTextureEx(game::clowds0,     Vector2{0 - player.x_pos / 25.0f, 0 - player.y_pos / 25.0f}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
     
     DrawTextureEx(game::over0, Vector2{0 - player.x_pos / 20.0f, 0 - player.y_pos / 20.0f}, 0.0f, 0.75f, BASE_DARKER_COLOR);
-    DrawTextureEx(game::over1, Vector2{0 - player.x_pos / 8.0f, 0 - player.y_pos / 8.0f}, 0.0f, 0.75f, HIGH_MID_COLOR);
-    DrawTextureEx(game::over2, Vector2{0 - player.x_pos / 4.0f, 0 - player.y_pos / 4.0f}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
-    DrawTextureEx(game::over3, Vector2{0 - player.x_pos / 3.5f, 0 - player.y_pos / 3.5f}, 0.0f, 0.75f, MAIN_HALF_COLOR);
-    DrawTextureEx(game::over4, Vector2{0 - player.x_pos / 3.0f, 0 - player.y_pos / 3.0f}, 0.0f, 0.7f, MAIN_TWO_THIRDS_COLOR);
+    DrawTextureEx(game::over1, Vector2{0 - player.x_pos /  8.0f, 0 - player.y_pos /  8.0f}, 0.0f, 0.75f, HIGH_MID_COLOR);
+    DrawTextureEx(game::over2, Vector2{0 - player.x_pos /  4.0f, 0 - player.y_pos /  4.0f}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
+    DrawTextureEx(game::over3, Vector2{0 - player.x_pos /  3.5f, 0 - player.y_pos /  3.5f}, 0.0f, 0.75f, MAIN_HALF_COLOR);
+    DrawTextureEx(game::over4, Vector2{0 - player.x_pos /  3.0f, 0 - player.y_pos /  3.0f}, 0.0f, 0.7f,  MAIN_TWO_THIRDS_COLOR);
 
     game::level.draw();
     

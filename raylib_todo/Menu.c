@@ -42,7 +42,7 @@ screen_enum current_screen = NO_SCREEN;
 
 void handle_nothing(void)
 {
-return;
+  return;
 }
 
 void handle_quit(void) 
@@ -93,7 +93,7 @@ void handle_theme(void)
 }
 
 struct {s32 selected_option; char* menu_options[THEME_TOGGLE + 1]; void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu = {QUIT, \
-                                                                                                                            {"NOTHING", "QUIT", "Select theme"}, \
+                                                                                                                            {"NOTHING", "QUIT", "Change theme"}, \
                                                                                                                             {handle_nothing, handle_quit, handle_theme}};
 void DrawMenu(void)
 {
@@ -102,29 +102,45 @@ void DrawMenu(void)
                                           SCREEN_HEIGHT / 2.0f - MIN_COLLISION_LENGTH * 4.0f, \
                                           MIN_COLLISION_LENGTH * 50.0f, \
                                           MIN_COLLISION_LENGTH * 4.0f};
+  Color nothing_menu_item_color = (Menu.selected_option == NO_OPTION)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
+  
   static Rectangle quit_menu_item_rect = {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
                                           SCREEN_HEIGHT / 2.0f, \
                                           MIN_COLLISION_LENGTH * 50.0f, \
                                           MIN_COLLISION_LENGTH * 4.0f};
+  Color quit_menu_item_color = (Menu.selected_option == QUIT)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
+  
   static Rectangle theme_menu_item_rect =  {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
                                             SCREEN_HEIGHT / 2.0f + MIN_COLLISION_LENGTH * 4.0f, \
                                             MIN_COLLISION_LENGTH * 50.0f, \
                                             MIN_COLLISION_LENGTH * 4.0f};
-  Color quit_menu_item_color = (Menu.selected_option == QUIT)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
-  Color theme_menu_item_color = (Menu.selected_option == THEME_TOGGLE)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
-  Color nothing_menu_item_color = (Menu.selected_option == NO_OPTION)? BASE_DARKER_COLOR : BASE_LIGHTER_COLOR;
+  Color theme_menu_item_color = (Menu.selected_option == THEME_TOGGLE)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
 
   BeginDrawing();
   {
-
+    
     ClearBackground(BASE_COLOR);
+    
+    DrawTextureEx(sun_texture, Vector2{0, 0}, 0.0f, 1.0f, GOLD_COLOR);
 
+    DrawTextureEx(clowds0, Vector2{0, 0}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
+    
+    DrawTextureEx(over0, Vector2{0, 0}, 0.0f, 0.75f, BASE_DARKER_COLOR);
+    DrawTextureEx(over1, Vector2{0, 0}, 0.0f, 0.75f, HIGH_MID_COLOR);
+    DrawTextureEx(over2, Vector2{0, 0}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
+    DrawTextureEx(over3, Vector2{0, 0}, 0.0f, 0.75f, MAIN_HALF_COLOR);
+    DrawTextureEx(over4, Vector2{0, 0}, 0.0f, 0.7f,  MAIN_TWO_THIRDS_COLOR);
+   
+    DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BASE_DARKER_COLOR, 0.5f));
+    
     DrawRectangleRec(nothing_menu_item_rect, nothing_menu_item_color);
-    DrawText(Menu.menu_options[NO_OPTION], (s32)nothing_menu_item_rect.x, (s32)nothing_menu_item_rect.y, 50, MAIN_FULL_COLOR);
+    DrawText(Menu.menu_options[NO_OPTION], (s32)nothing_menu_item_rect.x, (s32)nothing_menu_item_rect.y, 40, MAIN_FULL_COLOR);
+    
     DrawRectangleRec(quit_menu_item_rect, quit_menu_item_color);
-    DrawText(Menu.menu_options[QUIT], (s32)quit_menu_item_rect.x, (s32)quit_menu_item_rect.y, 50, MAIN_FULL_COLOR);
+    DrawText(Menu.menu_options[QUIT], (s32)quit_menu_item_rect.x, (s32)quit_menu_item_rect.y, 40, MAIN_FULL_COLOR);
+    
     DrawRectangleRec(theme_menu_item_rect, theme_menu_item_color);
-    DrawText(Menu.menu_options[THEME_TOGGLE], (s32)theme_menu_item_rect.x, (s32)theme_menu_item_rect.y, 50, MAIN_FULL_COLOR);
+    DrawText(Menu.menu_options[THEME_TOGGLE], (s32)theme_menu_item_rect.x, (s32)theme_menu_item_rect.y, 40, MAIN_FULL_COLOR);
     
   }  
   EndDrawing();
