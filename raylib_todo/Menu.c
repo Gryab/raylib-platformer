@@ -13,17 +13,18 @@ typedef enum
 
   NO_SCREEN = 0,
   MENU_SCREEN = 1,
-  LEVEL_SCREEN = 2
+  LEVEL_SCREEN,
+  LEVEL_CHOOSE_SCREEN
 
 } screen_enum;
 
 typedef enum 
 {
-  NO_OPTION = 0,
+  QUIT = 0,
 
-  QUIT = 1,
+  CHOOSE_LEVEL_SET,
 
-  THEME_TOGGLE = 2,
+  THEME_TOGGLE,
 
 } menu_options;
 
@@ -36,7 +37,7 @@ typedef enum
 
 } theme;
 
-theme current_theme = DARK;
+u32 current_theme = DARK;
 
 screen_enum current_screen = NO_SCREEN;
 
@@ -50,9 +51,14 @@ void handle_quit(void)
   running = false;
 }
 
+void handle_levels(void)
+{
+  current_screen = LEVEL_CHOOSE_SCREEN;
+}
+
 void handle_theme(void)
 {
-  current_theme = (current_theme == LIGHT) ? DARK : LIGHT;
+  current_theme ^= 1;
   if(current_theme == LIGHT)
   {
     MAIN_FULL_COLOR       = LIGHT_MAIN_FULL_COLOR;         
@@ -92,28 +98,25 @@ void handle_theme(void)
   }
 }
 
-struct {s32 selected_option; char* menu_options[THEME_TOGGLE + 1]; void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu = {QUIT, \
-                                                                                                                            {"NOTHING", "QUIT", "Change theme"}, \
-                                                                                                                            {handle_nothing, handle_quit, handle_theme}};
-void DrawMenu(void)
-{
+  static r32 menu_item_width = MIN_COLLISION_LENGTH * 50.0f;
+  static r32 menu_item_x_off = (SCREEN_WIDTH - menu_item_width) / 2.0f;
+  static r32 menu_item_height = MIN_COLLISION_LENGTH * 4.0f;
 
-  static Rectangle nothing_menu_item_rect = {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
-                                          SCREEN_HEIGHT / 2.0f - MIN_COLLISION_LENGTH * 4.0f, \
-                                          MIN_COLLISION_LENGTH * 50.0f, \
-                                          MIN_COLLISION_LENGTH * 4.0f};
-  Color nothing_menu_item_color = (Menu.selected_option == NO_OPTION)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
+struct {s32 selected_option; char* menu_options[THEME_TOGGLE + 1]; Rectangle menu_item_rect[THEME_TOGGLE + 1]; void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu = \
+        {QUIT, \
+        {"QUIT", "Choose levels", "Change theme"}, \
+        { Rectangle{menu_item_x_off, SCREEN_HEIGHT / 2.0f + menu_item_height * (-1.0f), menu_item_width, menu_item_height}, \
+          Rectangle{menu_item_x_off, SCREEN_HEIGHT / 2.0f + menu_item_height * 0.0f,    menu_item_width, menu_item_height}, \
+          Rectangle{menu_item_x_off, SCREEN_HEIGHT / 2.0f + menu_item_height * 1.0f,    menu_item_width, menu_item_height}}, \
+        {handle_quit, handle_levels, handle_theme}};
+
+void DrawMenu(void)
+{ 
   
-  static Rectangle quit_menu_item_rect = {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
-                                          SCREEN_HEIGHT / 2.0f, \
-                                          MIN_COLLISION_LENGTH * 50.0f, \
-                                          MIN_COLLISION_LENGTH * 4.0f};
   Color quit_menu_item_color = (Menu.selected_option == QUIT)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
   
-  static Rectangle theme_menu_item_rect =  {SCREEN_WIDTH / 2.0f - MIN_COLLISION_LENGTH * 50.0f / 2.0f, \
-                                            SCREEN_HEIGHT / 2.0f + MIN_COLLISION_LENGTH * 4.0f, \
-                                            MIN_COLLISION_LENGTH * 50.0f, \
-                                            MIN_COLLISION_LENGTH * 4.0f};
+  Color nothing_menu_item_color = (Menu.selected_option == CHOOSE_LEVEL_SET)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
+  
   Color theme_menu_item_color = (Menu.selected_option == THEME_TOGGLE)? Color{0, 0, 0, 0} : BASE_LIGHTER_COLOR;
 
   BeginDrawing();
@@ -121,27 +124,27 @@ void DrawMenu(void)
     
     ClearBackground(BASE_COLOR);
     
-    DrawTextureEx(sun_texture, Vector2{0, 0}, 0.0f, 1.0f, GOLD_COLOR);
+    DrawTextureEx(sun_texture, Vector2{0.0f, 0.0f}, 0.0f, 1.0f, GOLD_COLOR);
 
-    DrawTextureEx(clowds0, Vector2{0, 0}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
+    DrawTextureEx(clowds0, Vector2{0.0f, 0.0f}, 0.0f, 1.0f, ColorAlpha(RED_SUBTLE_COLOR, 0.5f));
     
-    DrawTextureEx(over0, Vector2{0, 0}, 0.0f, 0.75f, BASE_DARKER_COLOR);
-    DrawTextureEx(over1, Vector2{0, 0}, 0.0f, 0.75f, HIGH_MID_COLOR);
-    DrawTextureEx(over2, Vector2{0, 0}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
-    DrawTextureEx(over3, Vector2{0, 0}, 0.0f, 0.75f, MAIN_HALF_COLOR);
-    DrawTextureEx(over4, Vector2{0, 0}, 0.0f, 0.7f,  MAIN_TWO_THIRDS_COLOR);
-   
+    DrawTextureEx(over0, Vector2{0.0f, 0.0f}, 0.0f, 0.75f, BASE_DARKER_COLOR);
+    DrawTextureEx(over1, Vector2{0.0f, 0.0f}, 0.0f, 0.75f, HIGH_MID_COLOR);
+    DrawTextureEx(over2, Vector2{0.0f, 0.0f}, 0.0f, 0.75f, HIGH_HIGH_COLOR);
+    DrawTextureEx(over3, Vector2{0.0f, 0.0f}, 0.0f, 0.75f, MAIN_HALF_COLOR);
+    DrawTextureEx(over4, Vector2{0.0f, 0.0f}, 0.0f, 0.7f,  MAIN_TWO_THIRDS_COLOR);
+    
     DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BASE_DARKER_COLOR, 0.5f));
     
-    DrawRectangleRec(nothing_menu_item_rect, nothing_menu_item_color);
-    DrawText(Menu.menu_options[NO_OPTION], (s32)nothing_menu_item_rect.x, (s32)nothing_menu_item_rect.y, 40, MAIN_FULL_COLOR);
+    DrawRectangleRec(Menu.menu_item_rect[CHOOSE_LEVEL_SET], nothing_menu_item_color);
+    DrawText(Menu.menu_options[CHOOSE_LEVEL_SET], (s32)Menu.menu_item_rect[CHOOSE_LEVEL_SET].x, (s32)Menu.menu_item_rect[CHOOSE_LEVEL_SET].y, 40, MAIN_FULL_COLOR);
     
-    DrawRectangleRec(quit_menu_item_rect, quit_menu_item_color);
-    DrawText(Menu.menu_options[QUIT], (s32)quit_menu_item_rect.x, (s32)quit_menu_item_rect.y, 40, MAIN_FULL_COLOR);
+    DrawRectangleRec(Menu.menu_item_rect[QUIT], quit_menu_item_color);
+    DrawText(Menu.menu_options[QUIT], (s32)Menu.menu_item_rect[QUIT].x, (s32)Menu.menu_item_rect[QUIT].y, 40, MAIN_FULL_COLOR);
     
-    DrawRectangleRec(theme_menu_item_rect, theme_menu_item_color);
-    DrawText(Menu.menu_options[THEME_TOGGLE], (s32)theme_menu_item_rect.x, (s32)theme_menu_item_rect.y, 40, MAIN_FULL_COLOR);
-    
+    DrawRectangleRec(Menu.menu_item_rect[THEME_TOGGLE], theme_menu_item_color);
+    DrawText(Menu.menu_options[THEME_TOGGLE], (s32)Menu.menu_item_rect[THEME_TOGGLE].x, (s32)Menu.menu_item_rect[THEME_TOGGLE].y, 40, MAIN_FULL_COLOR);
+   
   }  
   EndDrawing();
 

@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "common_defines.h"
-#include <ios>
 #include <string>
 #include "Level.cpp"
 
@@ -9,9 +8,6 @@
 namespace game 
 {
   bool running = true;
-
-  std::vector<std::string> level_names;
-  u32 level_name_num;
 
   bool ended;
   std::string final_time;
@@ -26,19 +22,18 @@ namespace game
 
   Texture2D sun_texture, clowds0, over0, over1, over2, over3, over4;
 
-namespace config 
-{
+  namespace config 
+  {
 
-  #include "Menu.c" //main entree point closer to the top of the file, no other reason to include a .c file
+    #include "Menu.c" //main entree point closer to the top of the file, no other reason to include a .c file
+
+  }
+
+  using namespace config;
+
+  #include "level_picker.cpp"
 
 }
-
-using namespace config;
-
-}
-
-s32 LoadLevelList(void);
-
 s32 GameLoopUpdate(Player& player);
 
 s32 StartGame(void);
@@ -66,7 +61,7 @@ s32 StartGame(void)
   
   SetTargetFPS(75);
 
-  if(LoadLevelList() != 0) 
+  if(game::LoadLevelList() != 0) 
   {
     return_defer(1);
   }
@@ -115,6 +110,12 @@ s32 StartGame(void)
         case game::LEVEL_SCREEN:
         {
           GameLoopUpdate(player);
+        }
+        break;
+        
+        case game::LEVEL_CHOOSE_SCREEN:
+        {
+          game::ChooseLevel();
         }
         break;
 
@@ -264,30 +265,4 @@ s32 GameLoopUpdate(Player& player)
   game::timer += GetFrameTime();
 
   return 0;
-}
-
-s32 LoadLevelList(void)
-{
-
-  std::fstream file;
-  file.open("level_list.txt", std::ios_base::in | std::ios_base::binary);
-
-  if(!file.is_open()) return 1;
-  
-  std::string level_name;
-
-  char clevel_name[100];
-
-  while (file.getline(clevel_name, 100, ';').good()) 
-  {
-    level_name = clevel_name;
-    game::level_names.push_back(level_name.substr(level_name.find_first_not_of(' ')));
-  }
-
-  while (file.is_open())
-  {
-    file.close();
-  }
-  return 0;
-
 }
