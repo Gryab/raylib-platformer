@@ -1,24 +1,26 @@
 #include <string>
 #include <vector>
 #include "common_defines.h"
-#include <ios>
+#include <fstream>
+#include <Windows.h>
+#include "shobjidl_core.h"
 
-std::vector<std::string> level_lists;
-std::vector<std::string> level_names;
-u32 level_name_num;
 s32 ChooseLevel(void)
 {
   //TODO GRyab: place all level_list's into level_lists vector using filesystem.hpp or boost (probably boost)
+  return 0;
 }
 
-s32 LoadLevelList(std::string list_name = "level_list.txt")
+std::vector<std::string> LoadLevelList(std::string list_name)
 {
 
   std::fstream file;
   file.open(list_name.c_str(), std::ios_base::in | std::ios_base::binary);
 
-  if(!file.is_open()) return 1;
-  
+  if(!file.is_open()) return (std::vector<std::string>)1;
+
+  std::vector<std::string> level_names;
+
   std::string level_name;
 
   char clevel_name[100];
@@ -33,6 +35,6 @@ s32 LoadLevelList(std::string list_name = "level_list.txt")
   {
     file.close();
   }
-  return 0;
+  return level_names;
 
 }

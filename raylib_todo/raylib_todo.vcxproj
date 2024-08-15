@@ -352,6 +352,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision_box.cpp" />
+    <ClCompile Include="level_picker.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

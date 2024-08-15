@@ -1,10 +1,12 @@
 #include "raylib.h"
-#include "raymath.h"
+#include "raymath.h" 
 #include "common_defines.h"
 #include <string>
-#include "Level.cpp"
-
+#include "Level.cpp"    //requires continuity between global variables for easier communication between game logic functions, so cpp files are included, not linked
 #include "player.cpp"
+
+std::vector<std::string> LoadLevelList(std::string list_name = "levels/firsty.txt");
+
 namespace game 
 {
   bool running = true;
@@ -30,8 +32,10 @@ namespace game
   }
 
   using namespace config;
-
-  #include "level_picker.cpp"
+//TODO FIXME Gryab: FIX THIS TO LOAD LEVELS AT RUNTIME THIS IS COMPTIME TEST, MKAY?
+  std::vector<std::string> level_lists;
+  std::vector<std::string> level_names = LoadLevelList();
+  u32 level_name_num;
 
 }
 s32 GameLoopUpdate(Player& player);
@@ -61,10 +65,10 @@ s32 StartGame(void)
   
   SetTargetFPS(75);
 
-  if(game::LoadLevelList() != 0) 
+  /*if(game::LoadLevelList() != 0) 
   {
     return_defer(1);
-  }
+  }*/
 
   {
     {
@@ -115,7 +119,7 @@ s32 StartGame(void)
         
         case game::LEVEL_CHOOSE_SCREEN:
         {
-          game::ChooseLevel();
+          //game::ChooseLevel();
         }
         break;
 
