@@ -5,7 +5,10 @@
 #include "Level.cpp"    //requires continuity between global variables for easier communication between game logic functions, so cpp files are included, not linked
 #include "player.cpp"
 
+std::string ChooseLevelListOpenFileDialog(void);
 std::vector<std::string> LoadLevelList(std::string list_name = "levels/firsty.txt");
+void InitValues(void);
+s32 RestartGame(Player& player);
 
 namespace game 
 {
@@ -32,10 +35,19 @@ namespace game
   }
 
   using namespace config;
-//TODO FIXME Gryab: FIX THIS TO LOAD LEVELS AT RUNTIME THIS IS COMPTIME TEST, MKAY?
   std::vector<std::string> level_lists;
-  std::vector<std::string> level_names = LoadLevelList();
+  std::vector<std::string> level_names;
   u32 level_name_num;
+
+  s32 ImplaceLevel(Player& player)
+  {
+    std::string level_list = ChooseLevelListOpenFileDialog();
+    if(level_list.empty()) return 1;
+    level_names = LoadLevelList(level_list);
+    if(level_names.empty()) return 1;
+    RestartGame(player);
+    return 0;
+  }
 
 }
 s32 GameLoopUpdate(Player& player);
@@ -65,11 +77,6 @@ s32 StartGame(void)
   
   SetTargetFPS(75);
 
-  /*if(game::LoadLevelList() != 0) 
-  {
-    return_defer(1);
-  }*/
-
   {
     {
       Image _image = LoadImage("assets/SUN.png");
@@ -88,11 +95,7 @@ s32 StartGame(void)
       game::over4 = LoadTextureFromImage(_image);
       UnloadImage(_image);
     }
-    game::level.load(game::level_names.at(game::level_name_num));
-
     Player player(Rectangle{20.0f, 20.0f, game::player_size, game::player_size}, game::velocity, game::g, Color{255, 0, 0, 255});
-
-    player.spawn_on_level(game::level);
 
     while (game::running)
     {
@@ -119,7 +122,8 @@ s32 StartGame(void)
         
         case game::LEVEL_CHOOSE_SCREEN:
         {
-          //game::ChooseLevel();
+          game::ImplaceLevel(player);
+          game::current_screen = game::MENU_SCREEN;
         }
         break;
 
