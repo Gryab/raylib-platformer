@@ -65,10 +65,24 @@ std::string ChooseLevelListOpenFileDialog(void)
 
 std::vector<std::string> FindLevelLists(void)
 {
-  //TODO GRyab: place all level_list's into level_lists vector using filesystem.hpp or boost (probably boost)
   
+  std::vector<std::string> result;
+  HANDLE find_handle = INVALID_HANDLE_VALUE;
+  WIN32_FIND_DATAA list_file_data;
 
-  return std::vector<std::string>(0);
+  find_handle = FindFirstFileA("levels/*.txt", &list_file_data);
+  
+  if(find_handle == INVALID_HANDLE_VALUE) return result;
+
+  do 
+  {
+    result.push_back(std::string(list_file_data.cFileName));
+  }
+  while (FindNextFileA(find_handle, &list_file_data) != 0);
+
+  FindClose(find_handle);
+
+  return result;
 }
 
 
