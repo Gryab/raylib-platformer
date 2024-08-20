@@ -77,7 +77,7 @@ void handle_theme(void)
     HIGH_LOW_COLOR        = LIGHT_HIGH_LOW_COLOR;       
     HIGH_MID_COLOR        = LIGHT_HIGH_MID_COLOR;       
     HIGH_HIGH_COLOR       = LIGHT_HIGH_HIGH_COLOR;      
-  } else if(current_theme == DARK)
+  } else //NOTE Grayb: if(current_theme == DARK)
   {
     MAIN_FULL_COLOR       = DARK_MAIN_FULL_COLOR;      
     MAIN_TWO_THIRDS_COLOR = DARK_MAIN_TWO_THIRDS_COLOR;
@@ -102,7 +102,11 @@ void handle_theme(void)
   static r32 menu_item_x_off = (SCREEN_WIDTH - menu_item_width) / 2.0f;
   static r32 menu_item_height = MIN_COLLISION_LENGTH * 4.0f;
 //memory locality go beep-boop:
-struct {s32 selected_option; char* menu_options[THEME_TOGGLE + 1]; Rectangle menu_item_rect[THEME_TOGGLE + 1]; void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu = \
+struct {s32 selected_option; \
+        char* menu_options[THEME_TOGGLE + 1]; \
+        Rectangle menu_item_rect[THEME_TOGGLE + 1]; \
+        void(*handle_menu_item[THEME_TOGGLE + 1])(void);} Menu \
+        = \
         {QUIT, \
         {"QUIT", "Choose levels", "Change theme"}, \
         { Rectangle{menu_item_x_off, SCREEN_HEIGHT / 2.0f + menu_item_height * (-1.0f), menu_item_width, menu_item_height}, \

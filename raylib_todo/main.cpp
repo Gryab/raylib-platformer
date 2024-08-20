@@ -73,6 +73,8 @@ s32 StartGame(void)
 
   InitValues();
 
+  game::current_screen = game::MENU_SCREEN;
+
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "window");
   
   SetTargetFPS(75);
@@ -155,8 +157,6 @@ defer:
 void InitValues(void)
 {
 
-  game::current_screen = game::MENU_SCREEN;
-
   game::level_name_num = 0;
 
   game::ended = false;
@@ -232,7 +232,7 @@ s32 GameLoopUpdate(Player& player)
 
   if(player.y_pos >= SCREEN_HEIGHT) player.spawn_on_level(game::level);
 
-  if(IsKeyPressed(KEY_R)) game::level.load(game::level_names.at(game::level_name_num)), player.spawn_on_level(game::level);
+  if(IsKeyPressed(KEY_R)) RestartGame(player);
 
   if(IsKeyPressed(KEY_ESCAPE)) 
   {
